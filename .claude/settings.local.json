@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npx:*)",
+      "Bash(ls:*)",
+      "Bash(./node_modules/.bin/tailwindcss init:*)",
+      "Bash(node -e \"const l = require\\(''lucide-react''\\); console.log\\(Object.keys\\(l\\).filter\\(k => /git|twit|link|youtube|music/i.test\\(k\\)\\).join\\(''\\\\n''\\)\\)\")",
+      "Bash(node:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

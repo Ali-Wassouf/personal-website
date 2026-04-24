@@ -1,0 +1,18 @@
+{
+  "releases": [
+    {
+      "id": "001",
+      "title": "— (coming soon)",
+      "type": "single",
+      "releaseDate": "2025-06-01",
+      "coverUrl": null,
+      "platforms": {
+        "spotify": null,
+        "youtubeMusic": null,
+        "appleMusic": null,
+        "soundcloud": null
+      },
+      "featured": true
+    }
+  ]
+}

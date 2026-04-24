@@ -1,0 +1,12 @@
+{
+  "name": "personal-website",
+  "private": true,
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.0.0",
+    "@types/node": "^20.14.2",
+    "typescript": "^5.4.5"
+  }
+}

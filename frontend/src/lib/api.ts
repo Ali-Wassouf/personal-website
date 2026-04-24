@@ -1,6 +1,6 @@
 import type { Post, CaseStudy, Book, MusicRelease } from '../types'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
+const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:3001/api/v1' : '/api')
 
 export class ApiError extends Error {
   status: number

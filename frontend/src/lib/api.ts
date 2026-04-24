@@ -44,5 +44,6 @@ export const api = {
   },
   music: {
     list: () => request<MusicRelease[]>('/music'),
+    get: (slug: string) => request<MusicRelease>(`/music/${slug}`),
   },
 }

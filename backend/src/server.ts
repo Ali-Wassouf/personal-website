@@ -102,6 +102,18 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { data: data?.releases ?? [] })
     }
 
+    // GET /music/:slug
+    const musicMatch = p.match(/^\/music\/([^/]+)$/)
+    if (musicMatch && req.method === 'GET') {
+      const slug = musicMatch[1]
+      const data = await readJsonFile<{ releases: Array<Record<string, unknown>> }>('music.json')
+      const release = data?.releases.find((r) => r.slug === slug)
+      if (!release) return send(res, 404, { error: { code: 'NOT_FOUND', message: 'Release not found' } })
+      const lyricsFile = await readMarkdownFile('music', slug)
+      if (lyricsFile?.body) release.lyricsRaw = lyricsFile.body
+      return send(res, 200, { data: release })
+    }
+
     send(res, 404, { error: { code: 'NOT_FOUND', message: `Route ${p} not found` } })
   } catch (err) {
     console.error(err)

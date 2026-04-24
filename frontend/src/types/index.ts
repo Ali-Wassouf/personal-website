@@ -36,15 +36,20 @@ export interface Book {
 
 export interface MusicRelease {
   id: string
+  slug: string
   title: string
+  titleArabic?: string
   type: 'single' | 'ep' | 'album'
   releaseDate: string
   coverUrl?: string
   platforms: {
     spotify?: string
+    youtube?: string
     youtubeMusic?: string
     appleMusic?: string
     soundcloud?: string
   }
   featured?: boolean
+  lyrics?: string
+  lyricsTranslation?: string
 }

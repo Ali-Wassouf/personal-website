@@ -9,6 +9,7 @@ import { PostDetail } from './pages/writing/PostDetail'
 import { BooksIndex } from './pages/books/BooksIndex'
 import { BookDetail } from './pages/books/BookDetail'
 import { MusicIndex } from './pages/music/MusicIndex'
+import { SongDetail } from './pages/music/SongDetail'
 import { NotFound } from './pages/NotFound'
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="books" element={<BooksIndex />} />
           <Route path="books/:slug" element={<BookDetail />} />
           <Route path="music" element={<MusicIndex />} />
+          <Route path="music/:slug" element={<SongDetail />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

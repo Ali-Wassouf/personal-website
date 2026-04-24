@@ -2,17 +2,63 @@
   "releases": [
     {
       "id": "001",
-      "title": "— (coming soon)",
+      "slug": "latmyeh",
+      "title": "Latmyeh",
+      "titleArabic": "لطمية",
       "type": "single",
-      "releaseDate": "2025-06-01",
-      "coverUrl": null,
+      "releaseDate": "2025-01-01",
+      "coverUrl": "https://img.youtube.com/vi/qZ2VF7D0_fU/hqdefault.jpg",
       "platforms": {
-        "spotify": null,
-        "youtubeMusic": null,
-        "appleMusic": null,
-        "soundcloud": null
+        "spotify": "https://open.spotify.com/album/0sxBNiyne39hKbE61IEniz",
+        "youtube": "https://www.youtube.com/watch?v=qZ2VF7D0_fU",
+        "appleMusic": "https://music.apple.com/sa/album/latmyeh-%D9%84%D8%B7%D9%85%D9%8A%D8%A9-single/1864108416"
       },
       "featured": true
+    },
+    {
+      "id": "002",
+      "slug": "the-owner-of-the-cart",
+      "title": "The owner of the cart",
+      "titleArabic": "صاحب العرباية",
+      "type": "single",
+      "releaseDate": "2024-10-02",
+      "coverUrl": "https://i.ytimg.com/vi/-DLW3cSmtTk/hqdefault.jpg",
+      "platforms": {
+        "spotify": "https://open.spotify.com/album/2ba4otFaY3xxIlVXoTf41E",
+        "youtube": "https://www.youtube.com/watch?v=-DLW3cSmtTk",
+        "appleMusic": "https://music.apple.com/sa/album/the-owner-of-the-cart-%D8%B5%D8%A7%D8%AD%D8%A8-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D8%A7%D9%8A%D8%A9-single/1771926564"
+      },
+      "featured": false
+    },
+    {
+      "id": "003",
+      "slug": "matar",
+      "title": "Matar",
+      "titleArabic": "مطر",
+      "type": "single",
+      "releaseDate": "2024-10-31",
+      "coverUrl": "https://i.ytimg.com/vi/8TiIAEa-0RM/hqdefault.jpg",
+      "platforms": {
+        "spotify": "https://open.spotify.com/album/2qeD8UMhbUJ9K0ubnzaW2Y",
+        "youtube": "https://www.youtube.com/watch?v=8TiIAEa-0RM",
+        "appleMusic": "https://music.apple.com/sa/album/matar-%D9%85%D8%B7%D8%B1-single/1776588742"
+      },
+      "featured": false
+    },
+    {
+      "id": "004",
+      "slug": "tashareen",
+      "title": "Tashareen",
+      "titleArabic": "تشارين",
+      "type": "single",
+      "releaseDate": "2024-12-24",
+      "coverUrl": "https://i.ytimg.com/vi/63irhaE9di4/hqdefault.jpg",
+      "platforms": {
+        "spotify": "https://open.spotify.com/album/4J4QxZMacVAwTxTh4xlqhr",
+        "youtube": "https://www.youtube.com/watch?v=63irhaE9di4",
+        "appleMusic": "https://music.apple.com/sa/album/%D8%AA%D8%B4%D8%A7%D8%B1%D9%8A%D9%86-single/1657913478"
+      },
+      "featured": false
     }
   ]
 }

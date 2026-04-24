@@ -31,19 +31,19 @@ export const api = {
       const qs = q.toString()
       return request<Post[]>(`/posts${qs ? `?${qs}` : ''}`)
     },
-    get: (slug: string) => request<Post>(`/posts/${slug}`),
+    get: (slug: string) => request<Post>(`/posts?slug=${slug}`),
   },
   caseStudies: {
     list: () => request<CaseStudy[]>('/case-studies'),
-    get: (slug: string) => request<CaseStudy>(`/case-studies/${slug}`),
+    get: (slug: string) => request<CaseStudy>(`/case-studies?slug=${slug}`),
   },
   books: {
     list: (genre?: string) =>
       request<Book[]>(`/books${genre ? `?genre=${genre}` : ''}`),
-    get: (slug: string) => request<Book>(`/books/${slug}`),
+    get: (slug: string) => request<Book>(`/books?slug=${slug}`),
   },
   music: {
     list: () => request<MusicRelease[]>('/music'),
-    get: (slug: string) => request<MusicRelease>(`/music/${slug}`),
+    get: (slug: string) => request<MusicRelease>(`/music?slug=${slug}`),
   },
 }

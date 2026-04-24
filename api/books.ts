@@ -1,11 +1,19 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { readMarkdownFiles } from './_lib/content'
+import { readMarkdownFiles, readMarkdownFile } from './_lib/content'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') return res.status(204).end()
 
   try {
+    const slug = req.query.slug as string | undefined
+
+    if (slug) {
+      const book = await readMarkdownFile('books', slug)
+      if (!book) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Book not found' } })
+      return res.json({ data: book })
+    }
+
     const genre = req.query.genre as string | undefined
     let books = await readMarkdownFiles('books')
     if (genre) books = books.filter((b) => b.genre === genre)

@@ -1,11 +1,19 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { readMarkdownFiles } from './_lib/content'
+import { readMarkdownFiles, readMarkdownFile } from './_lib/content'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') return res.status(204).end()
 
   try {
+    const slug = req.query.slug as string | undefined
+
+    if (slug) {
+      const study = await readMarkdownFile('case-studies', slug)
+      if (!study) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Case study not found' } })
+      return res.json({ data: study })
+    }
+
     const studies = await readMarkdownFiles('case-studies')
     studies.sort((a, b) =>
       new Date(b.publishedAt as string).getTime() - new Date(a.publishedAt as string).getTime()

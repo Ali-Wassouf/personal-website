@@ -3,7 +3,6 @@
  * Run: npx ts-node src/server.ts  (or use tsx)
  */
 import http from 'http'
-import path from 'path'
 import { readMarkdownFiles, readMarkdownFile, readJsonFile } from './lib/content'
 
 const PORT = process.env.PORT ?? 3001
@@ -34,9 +33,17 @@ const server = http.createServer(async (req, res) => {
   const params = url.searchParams
 
   try {
-    // GET /posts
+    // ── Posts ──────────────────────────────────────────────
     if (p === '/posts' && req.method === 'GET') {
+      const slug = params.get('slug')
+      if (slug) {
+        const post = await readMarkdownFile('thoughts', slug) ?? await readMarkdownFile('personal', slug)
+        if (!post) return send(res, 404, { error: { code: 'NOT_FOUND', message: 'Post not found' } })
+        return send(res, 200, { data: post })
+      }
       const category = params.get('category')
+      const page = Math.max(1, parseInt(params.get('page') || '1', 10))
+      const limit = Math.min(50, Math.max(1, parseInt(params.get('limit') || '20', 10)))
       const thoughts = await readMarkdownFiles('thoughts')
       const personal = await readMarkdownFiles('personal')
       let posts = [...thoughts, ...personal]
@@ -45,21 +52,27 @@ const server = http.createServer(async (req, res) => {
       posts.sort((a, b) =>
         new Date(b.publishedAt as string).getTime() - new Date(a.publishedAt as string).getTime()
       )
-      const items = posts.map(({ body: _b, ...r }) => r)
-      return send(res, 200, { data: items, meta: { total: items.length } })
+      const total = posts.length
+      const items = posts.slice((page - 1) * limit, page * limit).map(({ body: _b, ...r }) => r)
+      return send(res, 200, { data: items, meta: { total, page, limit } })
     }
 
-    // GET /posts/:slug
+    // GET /posts/:slug (path-based, kept for local compat)
     const postMatch = p.match(/^\/posts\/([^/]+)$/)
     if (postMatch && req.method === 'GET') {
-      const slug = postMatch[1]
-      const post = await readMarkdownFile('thoughts', slug) ?? await readMarkdownFile('personal', slug)
+      const post = await readMarkdownFile('thoughts', postMatch[1]) ?? await readMarkdownFile('personal', postMatch[1])
       if (!post) return send(res, 404, { error: { code: 'NOT_FOUND', message: 'Post not found' } })
       return send(res, 200, { data: post })
     }
 
-    // GET /case-studies
+    // ── Case Studies ───────────────────────────────────────
     if (p === '/case-studies' && req.method === 'GET') {
+      const slug = params.get('slug')
+      if (slug) {
+        const study = await readMarkdownFile('case-studies', slug)
+        if (!study) return send(res, 404, { error: { code: 'NOT_FOUND', message: 'Not found' } })
+        return send(res, 200, { data: study })
+      }
       const studies = await readMarkdownFiles('case-studies')
       studies.sort((a, b) =>
         new Date(b.publishedAt as string).getTime() - new Date(a.publishedAt as string).getTime()
@@ -68,7 +81,6 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { data: items })
     }
 
-    // GET /case-studies/:slug
     const csMatch = p.match(/^\/case-studies\/([^/]+)$/)
     if (csMatch && req.method === 'GET') {
       const study = await readMarkdownFile('case-studies', csMatch[1])
@@ -76,8 +88,14 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { data: study })
     }
 
-    // GET /books
+    // ── Books ──────────────────────────────────────────────
     if (p === '/books' && req.method === 'GET') {
+      const slug = params.get('slug')
+      if (slug) {
+        const book = await readMarkdownFile('books', slug)
+        if (!book) return send(res, 404, { error: { code: 'NOT_FOUND', message: 'Not found' } })
+        return send(res, 200, { data: book })
+      }
       const genre = params.get('genre')
       let books = await readMarkdownFiles('books')
       if (genre) books = books.filter((b) => b.genre === genre)
@@ -88,7 +106,6 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { data: items })
     }
 
-    // GET /books/:slug
     const bookMatch = p.match(/^\/books\/([^/]+)$/)
     if (bookMatch && req.method === 'GET') {
       const book = await readMarkdownFile('books', bookMatch[1])
@@ -96,13 +113,21 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { data: book })
     }
 
-    // GET /music
+    // ── Music ──────────────────────────────────────────────
     if (p === '/music' && req.method === 'GET') {
+      const slug = params.get('slug')
+      if (slug) {
+        const data = await readJsonFile<{ releases: Array<Record<string, unknown>> }>('music.json')
+        const release = data?.releases.find((r) => r.slug === slug)
+        if (!release) return send(res, 404, { error: { code: 'NOT_FOUND', message: 'Release not found' } })
+        const lyricsFile = await readMarkdownFile('music', slug)
+        if (lyricsFile?.body) release.lyricsRaw = lyricsFile.body
+        return send(res, 200, { data: release })
+      }
       const data = await readJsonFile<{ releases: unknown[] }>('music.json')
       return send(res, 200, { data: data?.releases ?? [] })
     }
 
-    // GET /music/:slug
     const musicMatch = p.match(/^\/music\/([^/]+)$/)
     if (musicMatch && req.method === 'GET') {
       const slug = musicMatch[1]

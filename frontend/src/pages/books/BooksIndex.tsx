@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { ChevronDown } from 'lucide-react'
 import { SectionHeader } from '../../components/ui/SectionHeader'
 import { BookCard } from '../../components/content/BookCard'
 import { api } from '../../lib/api'
@@ -14,18 +15,39 @@ const genres = [
   { value: 'political-science', label: 'political science' },
 ]
 
-const sections: { status: Book['status']; label: string; comment: string }[] = [
-  { status: 'finished',    label: 'Finished',     comment: '// finished' },
-  { status: 'in-progress', label: 'In Progress',  comment: '// in progress' },
-  { status: 'to-read',     label: 'To Read',      comment: '// to read' },
+const sections: { status: Book['status']; comment: string }[] = [
+  { status: 'finished',    comment: '// finished' },
+  { status: 'in-progress', comment: '// in progress' },
+  { status: 'to-read',     comment: '// to read' },
 ]
 
-function BookGrid({ books }: { books: Book[] }) {
+function CollapsibleSection({ comment, books }: { comment: string; books: Book[] }) {
+  const [open, setOpen] = useState(true)
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-      {books.map((book) => (
-        <BookCard key={book.slug} book={book} />
-      ))}
+    <div>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2 mb-6 group"
+      >
+        <h2 className="text-xs text-[#4a4a6a] tracking-widest group-hover:text-[#8888a8] transition-colors">
+          {comment}
+        </h2>
+        <span className="text-xs text-[#4a4a6a] group-hover:text-[#8888a8] transition-colors">
+          ({books.length})
+        </span>
+        <ChevronDown
+          size={12}
+          className={cn('text-[#4a4a6a] group-hover:text-[#8888a8] transition-all duration-200', !open && '-rotate-90')}
+        />
+      </button>
+      {open && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {books.map((book) => (
+            <BookCard key={book.slug} book={book} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -85,10 +107,7 @@ export function BooksIndex() {
             const section = byStatus(status)
             if (section.length === 0) return null
             return (
-              <div key={status}>
-                <h2 className="text-xs text-[#4a4a6a] tracking-widest mb-6">{comment}</h2>
-                <BookGrid books={section} />
-              </div>
+              <CollapsibleSection key={status} comment={comment} books={section} />
             )
           })}
           {books.length === 0 && (

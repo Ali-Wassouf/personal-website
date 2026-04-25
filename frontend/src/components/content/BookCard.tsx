@@ -37,7 +37,7 @@ export function BookCard({ book }: { book: Book }) {
         {book.title}
       </h3>
       <p className="text-xs text-[#8888a8] mb-3">{book.author}</p>
-      <Stars rating={book.rating} />
+      {book.rating != null && <Stars rating={book.rating} />}
     </Link>
   )
 }

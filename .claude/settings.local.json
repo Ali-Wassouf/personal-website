@@ -12,7 +12,8 @@
       "Bash(npm run:*)",
       "Bash(for f:*)",
       "Bash(do sed:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(grep:*)"
     ]
   }
 }

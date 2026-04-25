@@ -28,7 +28,7 @@ export interface Book {
   author: string
   genre: 'novels' | 'psychology' | 'self-improvement' | 'political-science'
   status: 'finished' | 'in-progress' | 'to-read'
-  rating: number
+  rating?: number
   publishedAt: string
   excerpt: string
   coverUrl?: string

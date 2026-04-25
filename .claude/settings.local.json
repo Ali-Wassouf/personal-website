@@ -13,7 +13,11 @@
       "Bash(for f:*)",
       "Bash(do sed:*)",
       "Bash(done)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(curl -s http://localhost:3001/api/v1/posts)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:3001/api/v1/music)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(r['title']\\) for r in d['data']]\")"
     ]
   }
 }

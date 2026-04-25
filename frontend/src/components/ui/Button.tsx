@@ -46,6 +46,9 @@ export function Button({
   )
 
   if (asLink) return <Link to={asLink} className={base}>{children}</Link>
-  if (href) return <a href={href} target="_blank" rel="noopener noreferrer" className={base}>{children}</a>
+  if (href) {
+    const isMailto = href.startsWith('mailto:')
+    return <a href={href} {...(!isMailto && { target: '_blank', rel: 'noopener noreferrer' })} className={base}>{children}</a>
+  }
   return <button onClick={onClick} className={base}>{children}</button>
 }

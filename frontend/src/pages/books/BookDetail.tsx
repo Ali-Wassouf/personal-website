@@ -63,7 +63,7 @@ export function BookDetail() {
             <img
               src={book.coverUrl}
               alt={book.title}
-              className="w-32 h-48 object-cover rounded-sm border border-[#2a2a3e] shrink-0"
+              className="w-32 h-32 object-cover rounded-sm border border-[#2a2a3e] shrink-0"
             />
           )}
           <div className="flex flex-col justify-center gap-3">

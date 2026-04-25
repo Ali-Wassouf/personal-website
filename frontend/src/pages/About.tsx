@@ -1,4 +1,4 @@
-import { Code2, MessageSquare, Briefcase, Music } from 'lucide-react'
+import { Code2, Briefcase } from 'lucide-react'
 import { SectionHeader } from '../components/ui/SectionHeader'
 import { Divider } from '../components/ui/Divider'
 import { Badge } from '../components/ui/Badge'
@@ -6,15 +6,13 @@ import { ExternalLink } from '../components/ui/ExternalLink'
 import { Button } from '../components/ui/Button'
 
 const techStack = [
-  'TypeScript', 'Node.js', 'React', 'Python', 'AWS', 'PostgreSQL',
-  'Redis', 'Docker', 'Kubernetes', 'GraphQL', 'Kafka', 'Terraform',
+  'Java', 'Spring', 'AWS', 'PostgreSQL', 'Cassandra',
+  'Flink', 'Redis', 'Terraform', 'Kafka',
 ]
 
 const socials = [
-  { href: 'https://github.com', label: 'GitHub', Icon: Code2 },
-  { href: 'https://twitter.com', label: 'Twitter / X', Icon: MessageSquare },
-  { href: 'https://linkedin.com', label: 'LinkedIn', Icon: Briefcase },
-  { href: 'https://soundcloud.com', label: 'SoundCloud', Icon: Music },
+  { href: 'https://github.com/Ali-Wassouf', label: 'GitHub', Icon: Code2 },
+  { href: 'https://www.linkedin.com/in/ali-wassouf/', label: 'LinkedIn', Icon: Briefcase },
 ]
 
 export function About() {
@@ -30,16 +28,14 @@ export function About() {
         <h2 className="text-xs text-[#00d4ff] tracking-widest mb-6">// the engineer</h2>
         <div className="space-y-4 text-[#8888a8] text-sm leading-relaxed">
           <p>
-            I'm a software engineer with a deep interest in distributed systems, developer tooling,
-            and the craft of building things that scale — technically and organizationally. I've worked
-            across the stack, but I gravitate toward backend infrastructure and the interesting problems
-            that live at system boundaries.
+            I'm a software engineer with a focus on distributed systems design and backend infrastructure.
+            I design systems that operate at scale — thinking carefully about consistency, fault tolerance,
+            data partitioning, and the tradeoffs that live between reliability and performance.
           </p>
           <p>
-            I care about writing code that is legible to future maintainers, designing APIs that don't
-            surprise their callers, and understanding the "why" behind technical decisions — not just
-            the "what." Most of my writing here comes from real problems I've encountered and the
-            frameworks I've developed for thinking through them.
+            Beyond the technical, I lead engineering teams. I care about building the right culture, making
+            decisions under ambiguity, and growing engineers who think in systems — not just features.
+            Most of my writing comes from real architectural decisions I've faced and the thinking behind them.
           </p>
         </div>
 
@@ -53,9 +49,8 @@ export function About() {
         </div>
 
         <div className="mt-6">
-          <Button href="/resume.pdf" variant="outline" accent="eng" size="sm">
-            view resume
-          </Button>
+          <p className="text-xs text-[#4a4a6a] tracking-widest">// get in touch</p>
+          <p className="text-sm text-[#22d3ee] mt-1">wassouf.ali.eng@gmail.com</p>
         </div>
       </section>
 
@@ -66,14 +61,14 @@ export function About() {
         <h2 className="text-xs text-[#f5a623] tracking-widest mb-6">// the artist</h2>
         <div className="space-y-4 text-[#8888a8] text-sm leading-relaxed">
           <p>
-            I've been making hip-hop for as long as I've been writing code. Both pursuits are, at
-            their core, about building something from nothing — arranging units (words, beats, functions,
-            abstractions) into something that communicates an idea clearly and, if you're lucky,
-            with some style.
+            I've been making hip-hop since 2008. It started as a creative outlet and became something
+            I can't separate from who I am. Music is where the part of me that feels gets to speak —
+            the unconscious, the emotional, the human — not the logical part I rely on at work.
           </p>
           <p>
-            My music explores the intersection of technical life and everything outside of it —
-            ambition, identity, late nights, and the questions that don't have Stack Overflow answers.
+            My music explores the human condition. It's about entertainment but also about honesty —
+            sitting with difficult feelings, finding language for things that resist it, and sharing
+            that with whoever needs to hear it. It's the one space where I don't optimize for anything.
           </p>
         </div>
 

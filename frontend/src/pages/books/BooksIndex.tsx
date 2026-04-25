@@ -11,7 +11,24 @@ const genres = [
   { value: 'novels', label: 'novels' },
   { value: 'psychology', label: 'psychology' },
   { value: 'self-improvement', label: 'self-improvement' },
+  { value: 'political-science', label: 'political science' },
 ]
+
+const sections: { status: Book['status']; label: string; comment: string }[] = [
+  { status: 'finished',    label: 'Finished',     comment: '// finished' },
+  { status: 'in-progress', label: 'In Progress',  comment: '// in progress' },
+  { status: 'to-read',     label: 'To Read',      comment: '// to read' },
+]
+
+function BookGrid({ books }: { books: Book[] }) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      {books.map((book) => (
+        <BookCard key={book.slug} book={book} />
+      ))}
+    </div>
+  )
+}
 
 export function BooksIndex() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -25,6 +42,8 @@ export function BooksIndex() {
       .then(setBooks)
       .finally(() => setLoading(false))
   }, [genre])
+
+  const byStatus = (status: Book['status']) => books.filter((b) => b.status === status)
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
@@ -60,14 +79,22 @@ export function BooksIndex() {
             <div key={i} className="h-64 rounded-md bg-[#111118] border border-[#1e1e2e] animate-pulse" />
           ))}
         </div>
-      ) : books.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {books.map((book) => (
-            <BookCard key={book.slug} book={book} />
-          ))}
-        </div>
       ) : (
-        <p className="text-sm text-[#4a4a6a]">No books added yet.</p>
+        <div className="space-y-14">
+          {sections.map(({ status, comment }) => {
+            const section = byStatus(status)
+            if (section.length === 0) return null
+            return (
+              <div key={status}>
+                <h2 className="text-xs text-[#4a4a6a] tracking-widest mb-6">{comment}</h2>
+                <BookGrid books={section} />
+              </div>
+            )
+          })}
+          {books.length === 0 && (
+            <p className="text-sm text-[#4a4a6a]">No books added yet.</p>
+          )}
+        </div>
       )}
     </div>
   )

@@ -1,11 +1,9 @@
 import { ExternalLink } from '../ui/ExternalLink'
-import { Code2, MessageSquare, Briefcase, Music } from 'lucide-react'
+import { Code2, Briefcase } from 'lucide-react'
 
 const socials = [
-  { href: 'https://github.com', label: 'GitHub', icon: Code2 },
-  { href: 'https://twitter.com', label: 'Twitter / X', icon: MessageSquare },
-  { href: 'https://linkedin.com', label: 'LinkedIn', icon: Briefcase },
-  { href: 'https://soundcloud.com', label: 'SoundCloud', icon: Music },
+  { href: 'https://github.com/Ali-Wassouf', label: 'GitHub', icon: Code2 },
+  { href: 'https://www.linkedin.com/in/ali-wassouf/', label: 'LinkedIn', icon: Briefcase },
 ]
 
 export function Footer() {

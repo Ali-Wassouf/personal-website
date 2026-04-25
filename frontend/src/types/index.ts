@@ -26,7 +26,8 @@ export interface Book {
   slug: string
   title: string
   author: string
-  genre: 'novels' | 'psychology' | 'self-improvement'
+  genre: 'novels' | 'psychology' | 'self-improvement' | 'political-science'
+  status: 'finished' | 'in-progress' | 'to-read'
   rating: number
   publishedAt: string
   excerpt: string

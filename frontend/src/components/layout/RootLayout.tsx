@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Nav } from './Nav'
 import { Footer } from './Footer'
+import { ScrollToTopButton } from '../ui/ScrollToTopButton'
 
 export function RootLayout() {
   const location = useLocation()
@@ -22,6 +23,7 @@ export function RootLayout() {
         </motion.main>
       </AnimatePresence>
       <Footer />
+      <ScrollToTopButton />
     </div>
   )
 }

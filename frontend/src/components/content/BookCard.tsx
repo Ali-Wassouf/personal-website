@@ -24,7 +24,7 @@ export function BookCard({ book }: { book: Book }) {
       className="group block p-5 border border-[#1e1e2e] rounded-md bg-[#111118] hover:border-[#2a2a3e] hover:bg-[#1a1a24] transition-all duration-200 no-underline"
     >
       {book.coverUrl && (
-        <div className="aspect-[2/3] mb-4 overflow-hidden rounded-sm border border-[#1e1e2e] bg-[#0d1117]">
+        <div className="aspect-square mb-4 overflow-hidden rounded-sm border border-[#1e1e2e] bg-[#0d1117]">
           <img
             src={book.coverUrl}
             alt={book.title}

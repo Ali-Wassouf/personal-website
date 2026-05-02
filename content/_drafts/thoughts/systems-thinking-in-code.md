@@ -4,7 +4,6 @@ slug: "systems-thinking-in-code"
 category: "thoughts"
 publishedAt: "2024-11-15"
 excerpt: "Most engineering failures aren't caused by bad code. They're caused by a failure to understand the system the code lives in."
-tags: ["systems", "engineering", "mental-models"]
 wordCount: 1240
 ---
 

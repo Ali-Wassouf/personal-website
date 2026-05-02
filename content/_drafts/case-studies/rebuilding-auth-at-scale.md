@@ -3,7 +3,6 @@ title: "Rebuilding Auth at Scale: From JWT to PASETO"
 slug: "rebuilding-auth-at-scale"
 publishedAt: "2024-10-02"
 excerpt: "Our JWT-based auth was working — until it wasn't. Here's how we migrated 2M users to PASETO tokens with zero downtime and what we learned about secure token design along the way."
-tags: ["security", "backend", "aws", "zero-downtime"]
 techStack: ["Node.js", "AWS Lambda", "Redis", "PostgreSQL", "PASETO"]
 role: "Lead Engineer"
 duration: "3 months"

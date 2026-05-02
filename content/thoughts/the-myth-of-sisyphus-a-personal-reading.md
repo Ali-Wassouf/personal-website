@@ -4,7 +4,6 @@ slug: "the-myth-of-sisyphus-a-personal-reading"
 category: "thoughts"
 publishedAt: "2026-04-28"
 excerpt: "Camus says we must imagine Sisyphus happy. I can't follow him there. A reading of the absurd through Damascus, depression, and the shape of a life lived in spirals."
-tags: ["philosophy", "absurdism", "camus", "meaning", "personal"]
 wordCount: 1500
 ---
 

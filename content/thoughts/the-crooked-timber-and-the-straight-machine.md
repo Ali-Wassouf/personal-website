@@ -4,7 +4,6 @@ slug: "the-crooked-timber-and-the-straight-machine"
 category: "thoughts"
 publishedAt: "2026-04-25"
 excerpt: "Kant said nothing straight was ever made from the crooked timber of humanity. Capitalism spent three centuries trying to disprove him. AI might be its final attempt."
-tags: ["ai", "creativity", "capitalism", "philosophy", "llm"]
 wordCount: 1900
 ---
 

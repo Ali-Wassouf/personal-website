@@ -145,7 +145,6 @@ slug: "url-slug"
 category: "thoughts"   # or "personal"
 publishedAt: "2025-01-08"
 excerpt: "One paragraph shown in list views"
-tags: ["tag1", "tag2"]
 wordCount: 980
 ---
 Body content in markdown...
@@ -158,7 +157,6 @@ title: "..."
 slug: "..."
 publishedAt: "2024-10-02"
 excerpt: "..."
-tags: [...]
 techStack: ["Node.js", "AWS Lambda", "Redis"]
 role: "Lead Engineer"
 duration: "3 months"

@@ -4,7 +4,6 @@ slug: "on-the-future-of-ai-tooling"
 category: "thoughts"
 publishedAt: "2025-01-08"
 excerpt: "We're in the autocomplete phase of AI tooling. The interesting question is what comes after it."
-tags: ["ai", "tooling", "future", "engineering"]
 wordCount: 980
 ---
 

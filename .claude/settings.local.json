@@ -17,7 +17,9 @@
       "Bash(curl -s http://localhost:3001/api/v1/posts)",
       "Bash(python3 -m json.tool)",
       "Bash(curl -s http://localhost:3001/api/v1/music)",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(r['title']\\) for r in d['data']]\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(r['title']\\) for r in d['data']]\")",
+      "Bash(sed -n '20,26p' /Users/aliwassouf/Documents/React/personal-website/content/thoughts/the-crooked-timber-and-the-straight-machine.md)",
+      "Bash(sed -n '3,8p' /Users/aliwassouf/Documents/React/personal-website/content/music/latmyeh.md)"
     ]
   }
 }

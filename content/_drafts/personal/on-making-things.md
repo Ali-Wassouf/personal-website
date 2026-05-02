@@ -4,7 +4,6 @@ slug: "on-making-things"
 category: "personal"
 publishedAt: "2024-10-20"
 excerpt: "I've been writing code and making music for about the same amount of time. I've never fully understood why I do both, until recently."
-tags: ["creativity", "music", "engineering", "identity"]
 wordCount: 820
 ---
 

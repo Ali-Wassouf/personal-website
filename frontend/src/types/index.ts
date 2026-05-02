@@ -4,7 +4,6 @@ export interface Post {
   category: 'thoughts' | 'personal'
   publishedAt: string
   excerpt: string
-  tags: string[]
   wordCount: number
   body?: string
 }
@@ -14,7 +13,6 @@ export interface CaseStudy {
   title: string
   publishedAt: string
   excerpt: string
-  tags: string[]
   techStack: string[]
   role: string
   duration: string

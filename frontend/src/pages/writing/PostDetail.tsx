@@ -65,18 +65,6 @@ export function PostDetail() {
         ) : (
           <p className="text-[#8888a8] text-sm">{post.excerpt}</p>
         )}
-
-        {post.tags.length > 0 && (
-          <footer className="mt-12 pt-8 border-t border-[#1e1e2e]">
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span key={tag} className="text-xs text-[#4a4a6a] border border-[#1e1e2e] rounded-sm px-2 py-0.5">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </footer>
-        )}
       </div>
     </>
   )

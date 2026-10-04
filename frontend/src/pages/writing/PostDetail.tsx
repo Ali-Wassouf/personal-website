@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { ScrollProgress } from '../../components/ui/ScrollProgress'
-import { Badge } from '../../components/ui/Badge'
+import { BackLink } from '../../components/ui/BackLink'
+import { MetaRow } from '../../components/ui/MetaRow'
+import { ArticleSkeleton, NotFoundState } from '../../components/ui/PageState'
 import { PostBody } from '../../components/content/PostBody'
+import { SITE } from '../../lib/site'
 import { formatDate } from '../../lib/dates'
 import { readingTime } from '../../lib/readingTime'
 import { api } from '../../lib/api'
@@ -23,49 +25,46 @@ export function PostDetail() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  if (loading) return (
-    <div className="max-w-3xl mx-auto px-6 py-16 animate-pulse space-y-4">
-      <div className="h-4 w-16 bg-[#111118] rounded" />
-      <div className="h-8 w-2/3 bg-[#111118] rounded" />
-    </div>
-  )
+  if (loading) return <ArticleSkeleton />
+  if (error || !post) return <NotFoundState message="Post not found." to="/writing" label="back to writing" />
 
-  if (error || !post) return (
-    <div className="max-w-3xl mx-auto px-6 py-16 text-center">
-      <p className="text-[#8888a8]">Post not found.</p>
-      <Link to="/writing" className="text-xs text-[#00d4ff] mt-4 block">← back to writing</Link>
-    </div>
-  )
+  const isPersonal = post.category === 'personal'
 
   return (
     <>
       <ScrollProgress />
-      <div className="max-w-3xl mx-auto px-6 py-16">
-        <Link
-          to="/writing"
-          className="inline-flex items-center gap-1 text-xs text-[#8888a8] hover:text-[#00d4ff] transition-colors no-underline mb-10"
-        >
-          <ArrowLeft size={12} /> writing
-        </Link>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16">
+        <BackLink to="/writing" label="writing" />
 
-        <header className="mb-10">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <Badge variant={post.category}>{post.category}</Badge>
-            <span className="text-xs text-[#4a4a6a]">{formatDate(post.publishedAt)}</span>
-            <span className="text-xs text-[#4a4a6a]">·</span>
-            <span className="text-xs text-[#4a4a6a]">{readingTime(post.wordCount)}</span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#e8e8f0] leading-tight">
+        <header className="mt-10 mb-12 space-y-5">
+          <MetaRow
+            items={[
+              <span className={isPersonal ? 'text-indigo-300 capitalize' : 'text-cyan-400 capitalize'}>{post.category}</span>,
+              formatDate(post.publishedAt),
+              readingTime(post.wordCount),
+            ]}
+          />
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
             {post.title}
           </h1>
+          {post.excerpt && (
+            <p className={`font-serif text-lg sm:text-xl text-zinc-300 italic leading-relaxed border-l-2 pl-4 py-1 ${isPersonal ? 'border-indigo-400/60' : 'border-cyan-400/60'}`}>
+              {post.excerpt}
+            </p>
+          )}
         </header>
 
-        {post.body ? (
-          <PostBody content={post.body} />
-        ) : (
-          <p className="text-[#8888a8] text-sm">{post.excerpt}</p>
-        )}
-      </div>
+        {post.body ? <PostBody content={post.body} /> : <p className="text-zinc-400 text-sm">{post.excerpt}</p>}
+
+        <footer className="mt-16 pt-8 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-zinc-400">
+          <div className="flex items-center gap-2">
+            <span className="text-white font-semibold">{SITE.name}</span>
+            <span>·</span>
+            <span>{formatDate(post.publishedAt)}</span>
+          </div>
+          <BackLink to="/writing" label="All writing" />
+        </footer>
+      </article>
     </>
   )
 }

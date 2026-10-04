@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 interface ButtonProps {
   children: React.ReactNode
-  variant?: 'primary' | 'ghost' | 'outline'
+  variant?: 'primary' | 'secondary' | 'ghost'
   size?: 'sm' | 'md'
   asLink?: string
   href?: string
@@ -23,24 +23,13 @@ export function Button({
   accent = 'eng',
 }: ButtonProps) {
   const base = cn(
-    'inline-flex items-center gap-2 font-medium transition-all duration-200 border rounded-lg cursor-pointer no-underline',
-    size === 'sm' ? 'px-3 py-1.5 text-xs' : 'px-5 py-2.5 text-sm',
+    'group inline-flex items-center gap-2 font-medium rounded-lg transition-all duration-150 cursor-pointer no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500',
+    size === 'sm' ? 'px-3.5 py-1.5 text-xs' : 'px-5 py-2.5 text-sm',
     {
-      // Primary eng — gradient bg
-      'text-[#08080e] border-transparent bg-gradient-to-r from-[#22d3ee] to-[#a855f7] hover:opacity-90 hover:shadow-[0_0_20px_#22d3ee30]':
-        variant === 'primary' && accent === 'eng',
-      // Primary music — gradient bg
-      'text-[#08080e] border-transparent bg-gradient-to-r from-[#a855f7] to-[#fb923c] hover:opacity-90 hover:shadow-[0_0_20px_#fb923c30]':
-        variant === 'primary' && accent === 'music',
-      // Outline eng
-      'bg-transparent text-[#22d3ee] border-[#22d3ee30] hover:border-[#22d3ee60] hover:bg-[#22d3ee0c] hover:shadow-[0_0_16px_#22d3ee18]':
-        variant === 'outline' && accent === 'eng',
-      // Outline music
-      'bg-transparent text-[#fb923c] border-[#fb923c30] hover:border-[#fb923c60] hover:bg-[#fb923c0c] hover:shadow-[0_0_16px_#fb923c18]':
-        variant === 'outline' && accent === 'music',
-      // Ghost
-      'bg-transparent text-[#8080a8] border-transparent hover:text-[#eeeef5] hover:bg-[#ffffff08]':
-        variant === 'ghost',
+      'bg-cyan-400 hover:bg-cyan-300 text-black shadow-sm': variant === 'primary' && accent === 'eng',
+      'bg-amber-400 hover:bg-amber-300 text-black shadow-sm': variant === 'primary' && accent === 'music',
+      'bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] text-zinc-200 hover:text-white': variant === 'secondary',
+      'text-zinc-400 hover:text-white hover:bg-white/[0.06]': variant === 'ghost',
     },
     className
   )

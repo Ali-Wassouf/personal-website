@@ -8,7 +8,7 @@ export function RootLayout() {
   const location = useLocation()
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0a0f]">
+    <div className="min-h-screen flex flex-col bg-[#090b0e] text-[#e6edf3]">
       <Nav />
       <AnimatePresence mode="wait">
         <motion.main
@@ -17,7 +17,7 @@ export function RootLayout() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
-          className="flex-1"
+          className="flex-1 pt-16"
         >
           <Outlet />
         </motion.main>

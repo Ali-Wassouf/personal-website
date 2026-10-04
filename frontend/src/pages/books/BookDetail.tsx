@@ -1,22 +1,19 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { ScrollProgress } from '../../components/ui/ScrollProgress'
-import { Badge } from '../../components/ui/Badge'
+import { BackLink } from '../../components/ui/BackLink'
+import { MetaRow } from '../../components/ui/MetaRow'
+import { ArticleSkeleton, NotFoundState } from '../../components/ui/PageState'
 import { PostBody } from '../../components/content/PostBody'
+import { BookCover, Rating } from '../../components/content/BookCard'
 import { formatDate } from '../../lib/dates'
 import { api } from '../../lib/api'
 import type { Book } from '../../types'
 
-function Stars({ rating }: { rating: number }) {
-  return (
-    <div className="flex gap-1 items-center">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={`text-sm ${i < rating ? 'text-[#f5a623]' : 'text-[#2a2a3e]'}`}>◆</span>
-      ))}
-      <span className="text-xs text-[#4a4a6a] ml-1">{rating}/5</span>
-    </div>
-  )
+const statusLabel: Record<Book['status'], string> = {
+  finished: 'Finished',
+  'in-progress': 'Reading now',
+  'to-read': 'Up next',
 }
 
 export function BookDetail() {
@@ -33,54 +30,42 @@ export function BookDetail() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  if (loading) return (
-    <div className="max-w-3xl mx-auto px-6 py-16 animate-pulse space-y-4">
-      <div className="h-4 w-16 bg-[#111118] rounded" />
-      <div className="h-8 w-2/3 bg-[#111118] rounded" />
-    </div>
-  )
-
-  if (error || !book) return (
-    <div className="max-w-3xl mx-auto px-6 py-16 text-center">
-      <p className="text-[#8888a8]">Book not found.</p>
-      <Link to="/books" className="text-xs text-[#00d4ff] mt-4 block">← back to books</Link>
-    </div>
-  )
+  if (loading) return <ArticleSkeleton />
+  if (error || !book) return <NotFoundState message="Book not found." to="/books" label="back to books" />
 
   return (
     <>
       <ScrollProgress />
-      <div className="max-w-3xl mx-auto px-6 py-16">
-        <Link
-          to="/books"
-          className="inline-flex items-center gap-1 text-xs text-[#8888a8] hover:text-[#00d4ff] transition-colors no-underline mb-10"
-        >
-          <ArrowLeft size={12} /> books
-        </Link>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16">
+        <BackLink to="/books" label="books" />
 
-        <header className="flex flex-col sm:flex-row gap-8 mb-12">
-          {book.coverUrl && (
-            <img
-              src={book.coverUrl}
-              alt={book.title}
-              className="w-32 h-32 object-cover rounded-sm border border-[#2a2a3e] shrink-0"
+        <header className="mt-10 mb-12 flex flex-col sm:flex-row gap-8 items-start">
+          <BookCover book={book} className="w-36 sm:w-44 aspect-[2/3] shrink-0" />
+
+          <div className="space-y-4 min-w-0">
+            <MetaRow
+              items={[
+                <span className="text-cyan-400 capitalize">{book.genre.replace('-', ' ')}</span>,
+                statusLabel[book.status],
+                `Reviewed ${formatDate(book.publishedAt)}`,
+              ]}
             />
-          )}
-          <div className="flex flex-col justify-center gap-3">
-            <Badge variant="default">{book.genre}</Badge>
-            <h1 className="text-3xl font-bold text-[#e8e8f0] leading-tight">{book.title}</h1>
-            <p className="text-sm text-[#8888a8]">{book.author}</p>
-            {book.rating != null && <Stars rating={book.rating} />}
-            <p className="text-xs text-[#4a4a6a]">reviewed {formatDate(book.publishedAt)}</p>
+            <div className="space-y-2">
+              <h1 className="font-serif text-3xl sm:text-5xl font-medium text-white leading-tight">{book.title}</h1>
+              <p className="text-base text-zinc-400">by {book.author}</p>
+            </div>
+            {book.rating != null && (
+              <div className="inline-flex items-center gap-3 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <span className="text-xs font-mono text-zinc-400">Rating</span>
+                <Rating rating={book.rating} className="text-sm tracking-widest" />
+                <span className="text-xs font-mono text-zinc-500">{book.rating}/5</span>
+              </div>
+            )}
           </div>
         </header>
 
-        {book.body ? (
-          <PostBody content={book.body} />
-        ) : (
-          <p className="text-[#8888a8] text-sm">{book.excerpt}</p>
-        )}
-      </div>
+        {book.body ? <PostBody content={book.body} /> : <p className="text-zinc-400 text-sm">{book.excerpt}</p>}
+      </article>
     </>
   )
 }

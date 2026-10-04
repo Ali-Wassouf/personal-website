@@ -1,43 +1,83 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Music2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
-import { Divider } from '../components/ui/Divider'
+import { PageHeader } from '../components/ui/PageHeader'
+import { MetaRow } from '../components/ui/MetaRow'
 import { CaseStudyCard } from '../components/content/CaseStudyCard'
 import { PostCard } from '../components/content/PostCard'
-import { PlatformLink } from '../components/content/PlatformLink'
+import { PlatformLink, activePlatforms } from '../components/content/PlatformLink'
 import { api } from '../lib/api'
-import type { CaseStudy, Post, MusicRelease } from '../types'
+import { formatDateShort } from '../lib/dates'
+import { cn } from '../lib/cn'
+import type { Book, CaseStudy, Post, MusicRelease } from '../types'
 
-function TypewriterText({ texts }: { texts: string[] }) {
-  const [index, setIndex] = useState(0)
-  const [displayed, setDisplayed] = useState('')
-  const [deleting, setDeleting] = useState(false)
+function ViewAll({ to, label, accent = 'eng' }: { to: string; label: string; accent?: 'eng' | 'music' }) {
+  return (
+    <Link
+      to={to}
+      className={cn(
+        'group inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 no-underline transition-colors shrink-0',
+        accent === 'music' ? 'hover:text-amber-300' : 'hover:text-cyan-300'
+      )}
+    >
+      {label}
+      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+    </Link>
+  )
+}
 
-  useEffect(() => {
-    const current = texts[index]
-    let timeout: ReturnType<typeof setTimeout>
-
-    if (!deleting && displayed === current) {
-      timeout = setTimeout(() => setDeleting(true), 2200)
-    } else if (deleting && displayed === '') {
-      setDeleting(false)
-      setIndex((i) => (i + 1) % texts.length)
-    } else {
-      timeout = setTimeout(() => {
-        setDisplayed(deleting ? current.slice(0, displayed.length - 1) : current.slice(0, displayed.length + 1))
-      }, deleting ? 40 : 70)
-    }
-
-    return () => clearTimeout(timeout)
-  }, [displayed, deleting, index, texts])
+function ReleaseSpotlight({ release }: { release: MusicRelease }) {
+  const platforms = activePlatforms(release.platforms)
 
   return (
-    <span className="gradient-text">
-      {displayed}
-      <span className="animate-pulse">_</span>
-    </span>
+    <div className="relative rounded-2xl bg-gradient-to-b from-white/[0.07] to-white/[0.02] border border-white/[0.08] p-5 sm:p-6 backdrop-blur-sm shadow-xl">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2 text-xs font-mono text-amber-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          Latest release
+        </div>
+        <ViewAll to="/music" label="Full discography" accent="music" />
+      </div>
+
+      <Link to={`/music/${release.slug}`} className="group mt-5 flex gap-4 items-start no-underline">
+        <div className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border border-white/[0.1] shadow-md bg-black">
+          {release.coverUrl ? (
+            <img
+              src={release.coverUrl}
+              alt={release.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-zinc-600 text-4xl">♪</div>
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0 space-y-1.5">
+          <MetaRow items={[<span className="capitalize">{release.type}</span>, formatDateShort(release.releaseDate)]} />
+          <div className="flex flex-wrap items-baseline gap-x-2">
+            <h3 className="text-xl font-bold text-white tracking-tight group-hover:text-amber-200 transition-colors">
+              {release.title}
+            </h3>
+            {release.titleArabic && (
+              <span className="text-xl font-arabic text-amber-300" lang="ar">{release.titleArabic}</span>
+            )}
+          </div>
+          <span className="inline-flex items-center gap-1 text-xs text-zinc-400 group-hover:text-amber-300 transition-colors">
+            Lyrics & translation <ArrowRight className="w-3 h-3" />
+          </span>
+        </div>
+      </Link>
+
+      {platforms.length > 0 && (
+        <div className="mt-5 pt-4 border-t border-white/[0.06] flex flex-wrap gap-2">
+          {platforms.map(([platform, href]) => (
+            <PlatformLink key={platform} platform={platform} href={href} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -45,170 +85,143 @@ export function Home() {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([])
   const [posts, setPosts] = useState<Post[]>([])
   const [music, setMusic] = useState<MusicRelease[]>([])
+  const [books, setBooks] = useState<Book[]>([])
 
   useEffect(() => {
     api.caseStudies.list().then(setCaseStudies).catch(() => {})
     api.posts.list({ limit: 3 }).then(setPosts).catch(() => {})
     api.music.list().then(setMusic).catch(() => {})
+    api.books.list().then(setBooks).catch(() => {})
   }, [])
 
-  const featured = caseStudies[0]
   const featuredRelease = music.find((m) => m.featured) ?? music[0]
+  const booksRead = books.filter((b) => b.status === 'finished').length
+
+  const proofs = [
+    { value: 'Since 2008', label: 'Writing hip-hop' },
+    caseStudies.length > 0 && { value: String(caseStudies.length), label: caseStudies.length === 1 ? 'Case study' : 'Case studies' },
+    booksRead > 0 && { value: String(booksRead), label: 'Books read & reviewed' },
+  ].filter(Boolean) as { value: string; label: string }[]
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-16">
-
+    <>
       {/* Hero */}
-      <motion.section
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative mb-28 pt-8"
-      >
-        {/* Ambient glow orbs */}
-        <div className="pointer-events-none absolute -top-20 -left-32 w-96 h-96 rounded-full bg-[#22d3ee] opacity-[0.055] blur-[96px]" />
-        <div className="pointer-events-none absolute -top-8 left-48 w-72 h-72 rounded-full bg-[#a855f7] opacity-[0.07] blur-[80px]" />
-        <div className="pointer-events-none absolute top-20 -right-16 w-64 h-64 rounded-full bg-[#fb923c] opacity-[0.05] blur-[72px]" />
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[680px] max-w-full h-[360px] bg-gradient-to-tr from-cyan-600/10 via-indigo-600/10 to-amber-500/5 blur-[120px] pointer-events-none rounded-full" />
 
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-8">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#22d3ee] shadow-[0_0_6px_#22d3ee]" />
-            <span className="text-xs text-[#44446a] tracking-widest">humans first</span>
-          </div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-7 space-y-6"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-zinc-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>humans first</span>
+                <span className="text-zinc-600">/</span>
+                <span className="text-zinc-400">engineering & hip-hop</span>
+              </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold leading-none mb-5 gradient-text">
-            Ali Wassouf
-          </h1>
+              <div className="space-y-3">
+                <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white">Ali Wassouf</h1>
+                <p className="text-xl sm:text-2xl font-mono text-cyan-400 font-medium">systems thinker_</p>
+              </div>
 
-          <p className="text-2xl md:text-3xl text-[#8080a8] mb-4 leading-relaxed font-medium">
-            <TypewriterText texts={[
-              'software engineer',
-              'systems thinker',
-              'hip-hop artist',
-              'avid reader',
-              'builder of things',
-            ]} />
-          </p>
+              <p className="text-base sm:text-lg text-zinc-300 leading-relaxed max-w-xl">
+                I write about engineering, the future of software, and life. I also make Arabic hip-hop.
+                This is where both worlds live.
+              </p>
 
-          <p className="text-base text-[#44446a] max-w-lg mb-12 leading-relaxed">
-            I write about engineering, the future of software, and life. I also make hip-hop.
-            This is where both worlds live.
-          </p>
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Button asLink="/engineering">
+                  Read engineering work
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Button>
+                <Button asLink="/music" variant="secondary">
+                  <Music2 className="w-4 h-4 text-amber-400" />
+                  Hear the music
+                </Button>
+              </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button asLink="/engineering" variant="primary" accent="eng">
-              read my work <ArrowRight size={14} />
-            </Button>
-            <Button asLink="/music" variant="outline" accent="music">
-              hear the music
-            </Button>
+              <div className="pt-6 border-t border-white/[0.06] flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-zinc-400 font-mono">
+                {proofs.map(({ value, label }, i) => (
+                  <div key={label} className="flex items-center gap-6">
+                    {i > 0 && <span className="text-zinc-700 hidden sm:inline" aria-hidden="true">·</span>}
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-semibold tabular-nums">{value}</span>
+                      <span>{label}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="lg:col-span-5"
+            >
+              {featuredRelease ? (
+                <ReleaseSpotlight release={featuredRelease} />
+              ) : (
+                <div className="h-64 rounded-2xl bg-white/[0.03] border border-white/[0.08] animate-pulse" />
+              )}
+            </motion.div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* Featured Case Study */}
-      {featured && (
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 }}
-          className="mb-20"
-        >
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <div className="w-px h-4 bg-gradient-to-b from-[#22d3ee] to-[#a855f7]" />
-              <h2 className="text-xs text-[#8080a8] tracking-widest uppercase">latest case study</h2>
-            </div>
-            <Link to="/engineering" className="text-xs text-[#44446a] hover:text-[#22d3ee] transition-colors no-underline flex items-center gap-1">
-              all case studies <ArrowRight size={11} />
-            </Link>
-          </div>
-          <CaseStudyCard study={featured} />
-        </motion.section>
-      )}
-
-      <Divider />
-
-      {/* Latest Writing */}
-      {posts.length > 0 && (
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.25 }}
-          className="mb-20"
-        >
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <div className="w-px h-4 bg-gradient-to-b from-[#a855f7] to-[#fb923c]" />
-              <h2 className="text-xs text-[#8080a8] tracking-widest uppercase">latest writing</h2>
-            </div>
-            <Link to="/writing" className="text-xs text-[#44446a] hover:text-[#a855f7] transition-colors no-underline flex items-center gap-1">
-              all posts <ArrowRight size={11} />
-            </Link>
-          </div>
-          <div className="grid md:grid-cols-3 gap-4">
-            {posts.map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      <Divider />
-
-      {/* Music teaser */}
-      <motion.section
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.35 }}
-      >
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2">
-            <div className="w-px h-4 bg-gradient-to-b from-[#fb923c] to-transparent" />
-            <h2 className="text-xs text-[#fb923c] tracking-widest uppercase">latest drop</h2>
-          </div>
-          <Link to="/music" className="text-xs text-[#44446a] hover:text-[#fb923c] transition-colors no-underline flex items-center gap-1">
-            full discography <ArrowRight size={11} />
-          </Link>
-        </div>
-
-        {featuredRelease ? (
-          <div className="relative flex flex-col sm:flex-row gap-6 p-6 border border-[#1a1a2e] rounded-xl bg-[#0f0f1a] overflow-hidden glow-amber">
-            {/* Ambient glow inside card */}
-            <div className="pointer-events-none absolute -top-8 -right-8 w-48 h-48 rounded-full bg-[#fb923c] opacity-[0.07] blur-[48px]" />
-
-            {featuredRelease.coverUrl && (
-              <img
-                src={featuredRelease.coverUrl}
-                alt={featuredRelease.title}
-                className="w-24 h-24 rounded-lg object-cover border border-[#252540] shrink-0"
+      {/* Engineering */}
+      {caseStudies.length > 0 && (
+        <section className="py-20 border-t border-white/[0.06]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <PageHeader
+                as="h2"
+                kicker="systems & infrastructure"
+                title="Engineering"
+                description="Deep dives into real backend problems — architecture decisions, trade-offs, and what held up in production."
               />
-            )}
-            <div className="flex flex-col gap-3 relative">
-              <div>
-                <p className="text-xs text-[#fb923c] mb-1 tracking-wider">{featuredRelease.type}</p>
-                <h3 className="text-lg font-bold text-[#eeeef5]">{featuredRelease.title}</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(featuredRelease.platforms).map(([platform, href]) =>
-                  href ? (
-                    <PlatformLink
-                      key={platform}
-                      platform={platform as 'spotify' | 'youtubeMusic' | 'appleMusic' | 'soundcloud'}
-                      href={href}
-                      size="sm"
-                    />
-                  ) : null
-                )}
-              </div>
+              <ViewAll to="/engineering" label="All case studies" />
+            </div>
+            <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+              {caseStudies.slice(0, 2).map((study, i) => (
+                <div
+                  key={study.slug}
+                  className={cn('flex [&>*]:flex-1', caseStudies.length > 1 ? (i === 0 ? 'lg:col-span-7' : 'lg:col-span-5') : 'lg:col-span-12')}
+                >
+                  <CaseStudyCard study={study} featured={i === 0} />
+                </div>
+              ))}
             </div>
           </div>
-        ) : (
-          <div className="p-6 border border-[#1a1a2e] rounded-xl bg-[#0f0f1a]">
-            <p className="text-sm text-[#8080a8]">Music coming soon. Stay tuned.</p>
+        </section>
+      )}
+
+      {/* Writing */}
+      {posts.length > 0 && (
+        <section className="py-20 border-t border-white/[0.06]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <PageHeader
+                as="h2"
+                kicker="essays & observations"
+                title="Latest writing"
+                description="Thoughts on engineering, the industry, books, and life. Unfiltered."
+              />
+              <ViewAll to="/writing" label="All writing" />
+            </div>
+            <div className="mt-10 space-y-4">
+              {posts.map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </div>
           </div>
-        )}
-      </motion.section>
-    </div>
+        </section>
+      )}
+    </>
   )
 }

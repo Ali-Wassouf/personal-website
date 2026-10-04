@@ -17,6 +17,7 @@ export interface CaseStudy {
   role: string
   duration: string
   outcome: string
+  wordCount?: number
   body?: string
 }
 

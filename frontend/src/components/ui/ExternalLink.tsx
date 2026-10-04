@@ -14,10 +14,7 @@ export function ExternalLink({ href, children, className, 'aria-label': ariaLabe
       target="_blank"
       rel="noopener noreferrer"
       aria-label={ariaLabel}
-      className={cn(
-        'text-[#8888a8] hover:text-[#e8e8f0] transition-colors duration-200',
-        className
-      )}
+      className={cn('text-zinc-400 hover:text-white transition-colors', className)}
     >
       {children}
     </a>

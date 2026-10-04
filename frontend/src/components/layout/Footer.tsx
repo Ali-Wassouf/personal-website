@@ -1,29 +1,60 @@
+import { Link } from 'react-router-dom'
+import { ArrowUp, Briefcase, Code2, Mail } from 'lucide-react'
 import { ExternalLink } from '../ui/ExternalLink'
-import { Code2, Briefcase } from 'lucide-react'
+import { NAV_LINKS, SITE } from '../../lib/site'
 
 const socials = [
-  { href: 'https://github.com/Ali-Wassouf', label: 'GitHub', icon: Code2 },
-  { href: 'https://www.linkedin.com/in/ali-wassouf/', label: 'LinkedIn', icon: Briefcase },
+  { href: SITE.github, label: 'GitHub', Icon: Code2 },
+  { href: SITE.linkedin, label: 'LinkedIn', Icon: Briefcase },
 ]
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#1a1a2e] mt-20">
-      <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <p className="text-xs text-[#44446a]">
-          <span className="gradient-text font-bold">~/ali</span>
-          <span className="ml-2">— software engineer + hip-hop artist</span>
-        </p>
-        <div className="flex items-center gap-4">
-          {socials.map(({ href, label, icon: Icon }) => (
-            <ExternalLink key={label} href={href} aria-label={label}
-              className="text-[#44446a] hover:text-[#eeeef5] transition-colors duration-200"
-            >
-              <Icon size={15} />
-            </ExternalLink>
-          ))}
+    <footer className="mt-24 py-16 border-t border-white/[0.06] bg-[#07080b] text-zinc-400 text-xs font-mono">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-bold text-sm tracking-tight">{SITE.name}</span>
+              <span className="text-zinc-600">/</span>
+              <span className="text-cyan-400">{SITE.tagline}</span>
+            </div>
+            <p className="text-zinc-500 font-sans text-xs max-w-md">
+              Distributed systems, software architecture trade-offs, and independent Arabic hip-hop.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {socials.map(({ href, label, Icon }) => (
+              <ExternalLink key={label} href={href} aria-label={label}>
+                <Icon className="w-4 h-4" />
+              </ExternalLink>
+            ))}
+            <a href={`mailto:${SITE.email}`} aria-label="Email" className="hover:text-white transition-colors">
+              <Mail className="w-4 h-4" />
+            </a>
+          </div>
         </div>
-        <p className="text-xs text-[#44446a]">© {new Date().getFullYear()}</p>
+
+        <div className="pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 text-[11px]">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {NAV_LINKS.map(({ to, label }, i) => (
+              <span key={to} className="flex items-center gap-4">
+                {i > 0 && <span aria-hidden="true">·</span>}
+                <Link to={to} className="hover:text-zinc-300 no-underline transition-colors">{label}</Link>
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-4">
+            <span>© {new Date().getFullYear()} {SITE.name}</span>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-1 hover:text-white transition-colors"
+            >
+              Back to top <ArrowUp className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
       </div>
     </footer>
   )

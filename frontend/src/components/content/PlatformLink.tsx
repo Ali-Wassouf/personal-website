@@ -1,24 +1,38 @@
-import { Music2, PlayCircle, Headphones, Radio, Tv2 } from 'lucide-react'
+import { Disc3, Headphones, Play, Radio, Tv2 } from 'lucide-react'
 import { cn } from '../../lib/cn'
 
-type Platform = 'spotify' | 'youtube' | 'youtubeMusic' | 'appleMusic' | 'soundcloud'
+export type Platform = 'spotify' | 'youtube' | 'youtubeMusic' | 'appleMusic' | 'soundcloud'
 
 interface PlatformLinkProps {
   platform: Platform
   href: string
-  size?: 'sm' | 'md' | 'lg'
+  variant?: 'pill' | 'compact'
 }
 
-const platforms: Record<Platform, { label: string; Icon: React.ElementType; color: string }> = {
-  spotify:      { label: 'Spotify',       Icon: Music2,      color: '#1db954' },
-  youtube:      { label: 'YouTube',       Icon: PlayCircle,  color: '#ff0000' },
-  youtubeMusic: { label: 'YouTube Music', Icon: Tv2,         color: '#ff0000' },
-  appleMusic:   { label: 'Apple Music',   Icon: Headphones,  color: '#fc3c44' },
-  soundcloud:   { label: 'SoundCloud',    Icon: Radio,       color: '#fb923c' },
+const platforms: Record<Platform, { label: string; short: string; Icon: React.ElementType; pill: string }> = {
+  spotify:      { label: 'Spotify',       short: 'Spotify',    Icon: Disc3,      pill: 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-300' },
+  youtube:      { label: 'YouTube',       short: 'YouTube',    Icon: Play,       pill: 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-300' },
+  youtubeMusic: { label: 'YouTube Music', short: 'YT Music',   Icon: Tv2,        pill: 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-300' },
+  appleMusic:   { label: 'Apple Music',   short: 'Apple',      Icon: Headphones, pill: 'bg-pink-500/10 hover:bg-pink-500/20 border-pink-500/30 text-pink-300' },
+  soundcloud:   { label: 'SoundCloud',    short: 'SoundCloud', Icon: Radio,      pill: 'bg-orange-500/10 hover:bg-orange-500/20 border-orange-500/30 text-orange-300' },
 }
 
-export function PlatformLink({ platform, href, size = 'md' }: PlatformLinkProps) {
-  const { label, Icon, color } = platforms[platform]
+export function PlatformLink({ platform, href, variant = 'pill' }: PlatformLinkProps) {
+  const { label, short, Icon, pill } = platforms[platform]
+
+  if (variant === 'compact') {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Listen on ${label}`}
+        className="py-1 px-2 rounded bg-white/[0.03] hover:bg-white/[0.08] text-[11px] font-mono text-center text-zinc-300 hover:text-white transition-colors no-underline"
+      >
+        {short}
+      </a>
+    )
+  }
 
   return (
     <a
@@ -26,21 +40,19 @@ export function PlatformLink({ platform, href, size = 'md' }: PlatformLinkProps)
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Listen on ${label}`}
-      title={`Listen on ${label}`}
-      className={cn(
-        'inline-flex items-center gap-2 border border-[#252540] rounded-lg bg-[#0f0f1a] transition-all duration-200 no-underline group hover:bg-[#161625]',
-        size === 'sm'  ? 'px-3 py-1.5 text-xs' :
-        size === 'lg'  ? 'px-5 py-3 text-sm'   : 'px-4 py-2 text-sm',
-      )}
-      style={{ '--platform-color': color } as React.CSSProperties}
+      className={cn('inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border text-xs font-medium transition-colors no-underline', pill)}
     >
-      <Icon
-        size={size === 'sm' ? 12 : size === 'lg' ? 18 : 15}
-        style={{ color }}
-      />
-      <span className="text-[#8080a8] group-hover:text-[#eeeef5] transition-colors duration-200">
-        {label}
-      </span>
+      <Icon className="w-3.5 h-3.5" />
+      {label}
     </a>
   )
+}
+
+const PLATFORM_ORDER: Platform[] = ['spotify', 'youtube', 'youtubeMusic', 'appleMusic', 'soundcloud']
+
+/** Platforms with a URL, in a stable display order. */
+export function activePlatforms(platforms: Partial<Record<Platform, string | null>>): [Platform, string][] {
+  return PLATFORM_ORDER
+    .filter((p) => platforms[p])
+    .map((p) => [p, platforms[p] as string])
 }

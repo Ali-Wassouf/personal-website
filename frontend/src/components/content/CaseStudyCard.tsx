@@ -1,45 +1,73 @@
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
-import { Badge } from '../ui/Badge'
+import { ArrowUpRight } from 'lucide-react'
+import { MetaRow } from '../ui/MetaRow'
+import { cn } from '../../lib/cn'
 import { formatDate } from '../../lib/dates'
+import { readingTime } from '../../lib/readingTime'
 import type { CaseStudy } from '../../types'
 
-export function CaseStudyCard({ study }: { study: CaseStudy }) {
+export function CaseStudyCard({ study, featured = false }: { study: CaseStudy; featured?: boolean }) {
   return (
     <Link
       to={`/engineering/${study.slug}`}
-      className="group relative block p-6 border border-[#1a1a2e] rounded-xl bg-[#0f0f1a] hover:border-[#22d3ee28] hover:bg-[#161625] transition-all duration-300 no-underline overflow-hidden glow-cyan accent-bar-cyan"
-    >
-      {/* Subtle inner glow on hover */}
-      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(ellipse_at_top_left,#22d3ee08_0%,transparent_60%)]" />
-
-      <div className="relative flex items-center justify-between gap-4 mb-4">
-        <span className="text-xs text-[#44446a]">{formatDate(study.publishedAt)}</span>
-        <Badge variant="eng">case study</Badge>
-      </div>
-
-      <h3 className="relative text-lg font-bold text-[#eeeef5] mb-2 leading-snug group-hover:text-[#22d3ee] transition-colors duration-200">
-        {study.title}
-      </h3>
-
-      {study.outcome && (
-        <p className="relative text-xs text-[#22d3ee] bg-[#22d3ee08] border border-[#22d3ee18] rounded-md px-3 py-2 mb-3 font-medium">
-          ↗ {study.outcome}
-        </p>
+      className={cn(
+        'group flex flex-col justify-between rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-200 no-underline',
+        featured ? 'p-6 sm:p-8' : 'p-6'
       )}
+    >
+      <div className="space-y-5">
+        <MetaRow
+          items={[
+            <span className="text-cyan-400 font-medium">case study</span>,
+            formatDate(study.publishedAt),
+            study.wordCount ? readingTime(study.wordCount) : null,
+          ]}
+        />
 
-      <p className="relative text-sm text-[#8080a8] line-clamp-2 mb-4">{study.excerpt}</p>
-
-      <div className="relative flex items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-1.5">
-          {study.techStack.slice(0, 4).map((tech) => (
-            <Badge key={tech} variant="default">{tech}</Badge>
-          ))}
-          {study.techStack.length > 4 && (
-            <Badge variant="default">+{study.techStack.length - 4}</Badge>
+        <div className="space-y-2">
+          <h3 className={cn(
+            'font-bold text-white group-hover:text-cyan-300 transition-colors leading-snug',
+            featured ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'
+          )}>
+            {study.title}
+          </h3>
+          {(study.role || study.duration) && (
+            <p className="text-xs font-mono text-zinc-400">
+              {[study.role, study.duration].filter(Boolean).join(' · ')}
+            </p>
           )}
         </div>
-        <ArrowRight size={14} className="text-[#44446a] group-hover:text-[#22d3ee] group-hover:translate-x-1 transition-all duration-200 shrink-0" />
+
+        {study.outcome && (
+          <div className="p-3.5 rounded-lg bg-black/50 border border-cyan-500/20 space-y-1">
+            <div className="text-[11px] font-mono text-cyan-300/80">Outcome</div>
+            <div className="text-sm font-semibold text-cyan-100">{study.outcome}</div>
+          </div>
+        )}
+
+        <p className={cn('text-sm text-zinc-300 leading-relaxed', !featured && 'line-clamp-3')}>
+          {study.excerpt}
+        </p>
+
+        {study.techStack.length > 0 && (
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs font-mono">
+            <span className="text-zinc-400 font-medium">Stack:</span>
+            {study.techStack.map((tech, i) => (
+              <Fragment key={tech}>
+                <span className="text-zinc-300">{tech}</span>
+                {i < study.techStack.length - 1 && <span className="text-zinc-600">/</span>}
+              </Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="pt-5 mt-6 border-t border-white/[0.06] flex items-center justify-between">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 group-hover:text-cyan-300 transition-colors">
+          Read case study
+          <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+        </span>
       </div>
     </Link>
   )

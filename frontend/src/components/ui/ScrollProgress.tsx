@@ -14,13 +14,14 @@ export function ScrollProgress({ accent = 'eng' }: { accent?: 'eng' | 'music' })
   }, [])
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-[#1e1e2e]">
+    <div className="fixed top-0 left-0 right-0 h-0.5 z-50">
       <div
-        className="h-full transition-all duration-75"
-        style={{
-          width: `${progress}%`,
-          background: accent === 'eng' ? '#00d4ff' : '#f5a623',
-        }}
+        className={
+          accent === 'eng'
+            ? 'h-full bg-gradient-to-r from-cyan-400 to-indigo-500'
+            : 'h-full bg-gradient-to-r from-amber-500 to-amber-300'
+        }
+        style={{ width: `${progress}%` }}
       />
     </div>
   )

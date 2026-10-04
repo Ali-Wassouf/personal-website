@@ -44,60 +44,63 @@ The frontend auto-fetches from `http://localhost:3001/api/v1`. To override: set 
 ## Design system
 
 ### Philosophy
-"Engineer first, artist always." Dark theme only. Every element reads as intentional and technical, but the palette has warmth and personality.
+"Engineer first, artist always." Dark theme only. Calm, editorial, technical: a near-black canvas, translucent white surfaces, and colour used sparingly as signal. The look follows the reference mockup the redesign was based on (fixed blurred nav, kicker/title/description section headers, rounded-2xl translucent cards).
 
-### Color palette (all defined in `frontend/src/index.css` `@theme {}`)
+### Color palette
+Colours are plain Tailwind utilities (no custom colour tokens):
 ```
-Background:   #08080e (base)  #0f0f1a (surface)  #161625 (elevated)
-Borders:      #1a1a2e (subtle)  #252540 (muted)
-Text:         #eeeef5 (primary)  #8080a8 (secondary)  #44446a (muted)
-Cyan:         #22d3ee  (engineering accent)
-Violet:       #a855f7  (bridge / personal writing accent)
-Amber:        #fb923c  (music accent)
-Code bg:      #0d0d18
+Background:   #090b0e (page)  #07080b (footer)  #0d1017 (raised overlays)
+Surfaces:     bg-white/[0.02–0.05] with border-white/[0.06–0.1]
+Text:         #e6edf3 / text-white (primary)  text-zinc-300 (body)  text-zinc-400 (secondary)  text-zinc-500/600 (muted)
+Cyan:         cyan-400 (engineering / primary actions — solid bg-cyan-400 + text-black buttons)
+Indigo:       indigo-500 in gradients (cyan → indigo); indigo-300 marks "personal" writing
+Amber:        amber-400 / amber-300 (music)
+Platforms:    emerald (Spotify), red (YouTube), pink (Apple Music), orange (SoundCloud) — pills only
 ```
+Cyan = engineering/technical. Amber = music. Do not introduce new accent colours without discussion.
 
-Cyan = engineering/technical. Violet = personal/creative bridge. Amber = music. These are consistent across every component — do not introduce new accent colors without discussion.
+### Typography (loaded in `index.css`, exposed as `@theme` font tokens)
+- **Plus Jakarta Sans** (`font-sans`, default) — headings and body
+- **JetBrains Mono** (`font-mono`) — kickers, metadata rows, labels, the `~/ali` wordmark, `systems thinker_` tagline
+- **Newsreader** (`font-serif`) — italic pull quotes, post excerpts, English lyric translations, book titles
+- **Amiri** (`.font-arabic`, sets `direction: rtl`) — Arabic titles and lyrics
 
-### Typography
-- **JetBrains Mono** — loaded from Google Fonts, used for everything (headings, body, UI labels). Monospace is a deliberate identity choice, not a code aesthetic.
-- Font defined in CSS: `font-family: 'JetBrains Mono', 'Space Mono', monospace`
-
-### CSS utility classes (defined in `index.css`)
-- `.gradient-text` — cyan → violet gradient text (used on hero name, nav logo)
-- `.gradient-text-warm` — violet → amber gradient text (used for music-related headings)
-- `.glow-cyan / .glow-violet / .glow-amber` — box-shadow glow on hover for cards
-- `.accent-bar-cyan / .accent-bar-violet` — 2px gradient top border that fades in on card hover (uses `::before` pseudo-element; requires `overflow-hidden` on the card and `relative` on child content)
-- `.prose` — article body styles; used in `PostBody.tsx`
-
-### Background texture
-`body::before` adds a subtle 28px dot grid pattern across the entire page background using CSS only. Do not remove this — it adds depth to what would otherwise be a flat black surface.
-
-### Ambient glow orbs
-The Home page hero uses three absolute-positioned blurred divs (cyan, violet, amber) to create colored light behind the content. This technique can be reused on other hero-style sections. Opacity is intentionally low (0.05–0.07) — increasing it risks looking garish.
+### Recurring patterns
+- Section/page header: mono kicker in accent colour → `text-3xl sm:text-4xl font-bold tracking-tight` title → `text-zinc-400` description (`PageHeader`)
+- Metadata: mono `text-xs text-zinc-400` items separated by `·` (`MetaRow`)
+- Cards: `rounded-2xl bg-white/[0.02–0.03] border border-white/[0.08]`, hover lifts bg to `0.05` and tints the border with the accent (`hover:border-cyan-500/30`)
+- Content width `max-w-6xl` with `px-4 sm:px-6 lg:px-8`; articles use `max-w-3xl`
+- Hero ambient glow: one blurred `from-cyan-600/10 via-indigo-600/10 to-amber-500/5` blob — keep it subtle
+- `.prose` in `index.css` styles markdown article bodies (`PostBody.tsx`)
 
 ---
 
 ## Component map
 
 ### Layout
-- `RootLayout.tsx` — sticky Nav + AnimatePresence page transition + Footer
-- `Nav.tsx` — logo is `~/` (muted) + `ali` (gradient-text); active links get cyan pill border
-- `Footer.tsx` — social icon row
+- `RootLayout.tsx` — fixed Nav + AnimatePresence page transition (`main` has `pt-16` to clear the nav) + Footer + ScrollToTopButton
+- `Nav.tsx` — fixed; transparent at top, blurred `bg-[#090b0e]/85` once scrolled; `~/ali • wassouf` wordmark; active link has a cyan → indigo underline; copy-email button + "Get in touch" mailto
+- `Footer.tsx` — name / tagline, social icons, nav links, back to top
+
+### Shared config
+- `lib/site.ts` — `SITE` (name, tagline, email, GitHub, LinkedIn) and `NAV_LINKS`; use these instead of hardcoding URLs
+- `lib/useCopy.ts` — clipboard copy with a transient `copied` flag
 
 ### UI primitives (`components/ui/`)
-- `Badge.tsx` — variant prop: `eng` (cyan), `thoughts` (cyan), `personal` (violet), `music` (amber), `default` (muted)
-- `Button.tsx` — variant: `primary` (gradient bg), `outline` (colored border + glow), `ghost`; accent: `eng` or `music`
-- `Divider.tsx` — three colored dots (cyan · violet · amber) on faded gradient line
-- `ScrollProgress.tsx` — fixed top progress bar for article pages; accent prop controls color
-- `SectionHeader.tsx` — renders `// section-name` style heading
-- `ExternalLink.tsx` — opens in new tab, `rel="noopener noreferrer"`
+- `PageHeader.tsx` — kicker / title / description; `accent` (`eng` | `music`), `as` (`h1` | `h2`), optional `aside` slot (filters)
+- `SegmentedControl.tsx` — pill filter tabs (writing categories, book genres)
+- `MetaRow.tsx` — `·`-separated mono metadata
+- `BackLink.tsx` — `← label` link for detail pages
+- `Button.tsx` — variant: `primary` (solid cyan, or amber with `accent="music"`), `secondary` (translucent), `ghost`
+- `PageState.tsx` — `ArticleSkeleton` and `NotFoundState` for detail pages
+- `ScrollProgress.tsx` — fixed top progress bar for article pages; accent prop controls colour
+- `ScrollToTopButton.tsx`, `ExternalLink.tsx`
 
 ### Content components (`components/content/`)
-- `PostCard.tsx` — color-adapts between cyan (thoughts) and violet (personal) using `isThoughts` flag
-- `CaseStudyCard.tsx` — cyan glow + accent-bar-cyan; shows outcome stat block
-- `BookCard.tsx` — grid card with cover image, `◆` star rating in amber
-- `PlatformLink.tsx` — music platform links; platforms: `spotify`, `youtubeMusic`, `appleMusic`, `soundcloud`
+- `PostCard.tsx` — full-width row card; cyan for `thoughts`, indigo for `personal`
+- `CaseStudyCard.tsx` — meta row, outcome callout, `Stack: a / b / c`; `featured` prop for the larger variant
+- `BookCard.tsx` — also exports `BookCover` (real cover, or a generated genre-tinted cover when `coverUrl` is missing) and `Rating` (`◆` in amber)
+- `PlatformLink.tsx` — `pill` (brand-tinted) or `compact` variants; `activePlatforms()` returns platforms with URLs in a stable order
 - `PostBody.tsx` — wraps ReactMarkdown with remark-gfm + rehype-highlight inside `.prose`
 
 ---
@@ -204,11 +207,10 @@ coverUrl: "/images/books/cover.jpg"   # optional
 ## Known constraints and gotchas
 
 - **Node 20.12.0** — Vite is pinned to v5. Do not run `npm install vite@latest`.
-- **Tailwind v4** — there is no `tailwind.config.js`. All config (colors, fonts) lives in `src/index.css` `@theme {}`. Do not create a config file.
+- **Tailwind v4** — there is no `tailwind.config.js`. All config (fonts) lives in `src/index.css` `@theme {}`. Do not create a config file.
 - **`erasableSyntaxOnly: true`** — TypeScript constructor parameter shorthand (`public foo: string`) is banned. Always declare class fields explicitly.
 - **`verbatimModuleSyntax: true`** — All type-only imports must use `import type`. Inline `import('../types').Foo` in generics is also banned — import the type at the top of the file.
 - **lucide-react** — No `Github`, `Twitter`, `Linkedin`, `Youtube` exports. Use `Code2`, `MessageSquare`, `Briefcase`, `PlayCircle` as substitutes.
-- **`.accent-bar-*` CSS classes** — require `overflow-hidden` on the card wrapper AND `relative` on all child content; otherwise the `::before` pseudo-element bleeds out incorrectly.
 - **`@tanstack/react-query`** is installed but unused. Do not add `QueryClientProvider` unless explicitly asked to migrate the data layer.
 - **`postcss` and `autoprefixer`** are installed but Tailwind v4 via `@tailwindcss/vite` does not require a `postcss.config.js`. Do not create one.
 
@@ -225,5 +227,4 @@ These are the natural next steps — do not implement speculatively:
 - **Contact / newsletter** — email capture or contact form
 - **Real music data** — `music.json` currently has a placeholder "coming soon" entry; real release data + cover art need to be added
 - **Profile photo** — referenced in About page design notes but not yet in the UI
-- **Social links** — Footer and About hardcode `https://github.com`, `https://twitter.com`, etc.; these need to be replaced with real URLs
 - **React Query migration** — replace `useEffect`+`useState` data fetching patterns with `useQuery` hooks

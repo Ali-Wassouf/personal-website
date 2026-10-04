@@ -137,18 +137,17 @@ export function SongDetail() {
 
       {/* Blurred cover hero wash */}
       {release.coverUrl && (
-        <div className="relative h-64 overflow-hidden">
+        <div className="relative h-64 overflow-hidden pointer-events-none [mask-image:linear-gradient(to_bottom,black_40%,transparent)]">
           <img
             src={release.coverUrl}
             alt=""
             className="absolute inset-0 w-full h-full object-cover scale-110 blur-3xl opacity-25"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#08080e]/30 via-transparent to-[#08080e]" />
         </div>
       )}
 
       <div
-        className="max-w-4xl mx-auto px-6 pb-24"
+        className="relative max-w-4xl mx-auto px-6 pb-24"
         style={{ marginTop: release.coverUrl ? '-90px' : '64px' }}
       >
         <Link

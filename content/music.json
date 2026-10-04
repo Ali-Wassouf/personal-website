@@ -1,7 +1,22 @@
 {
   "releases": [
     {
-      "id": "001",
+      "id": "006",
+      "slug": "thawra",
+      "title": "Thawra",
+      "titleArabic": "ثورة",
+      "type": "single",
+      "releaseDate": "2026-10-04",
+      "coverUrl": "https://i.ytimg.com/vi/qf_wxFEB0lI/hq720.jpg",
+      "platforms": {
+        "spotify": "https://open.spotify.com/track/5pyAbLoTuEoSLW1dbmZM1u?si=e53a9b31d610487d",
+        "youtube": "https://youtu.be/GVbzp17amVk?si=if-cHXK0BbLKK1ni",
+        "appleMusic": "https://music.apple.com/us/album/%D8%AB%D9%88%D8%B1%D8%A9-single/6815509020"
+      },
+      "featured": true
+    },
+    {
+      "id": "002",
       "slug": "latmyeh",
       "title": "Latmyeh",
       "titleArabic": "لطمية",
@@ -16,7 +31,7 @@
       "featured": true
     },
     {
-      "id": "002",
+      "id": "003",
       "slug": "the-owner-of-the-cart",
       "title": "The owner of the cart",
       "titleArabic": "صاحب العرباية",
@@ -31,7 +46,7 @@
       "featured": false
     },
     {
-      "id": "003",
+      "id": "004",
       "slug": "matar",
       "title": "Matar",
       "titleArabic": "مطر",
@@ -46,7 +61,7 @@
       "featured": false
     },
     {
-      "id": "004",
+      "id": "005",
       "slug": "tashareen",
       "title": "Tashareen",
       "titleArabic": "تشارين",

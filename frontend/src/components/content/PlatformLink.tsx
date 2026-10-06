@@ -1,4 +1,4 @@
-import { Disc3, Headphones, Play, Radio, Tv2 } from 'lucide-react'
+import { Cloud, Disc3, Headphones, Play, Tv2 } from 'lucide-react'
 import { cn } from '../../lib/cn'
 
 export type Platform = 'spotify' | 'youtube' | 'youtubeMusic' | 'appleMusic' | 'soundcloud'
@@ -14,7 +14,7 @@ const platforms: Record<Platform, { label: string; short: string; Icon: React.El
   youtube:      { label: 'YouTube',       short: 'YouTube',    Icon: Play,       pill: 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-300' },
   youtubeMusic: { label: 'YouTube Music', short: 'YT Music',   Icon: Tv2,        pill: 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-300' },
   appleMusic:   { label: 'Apple Music',   short: 'Apple',      Icon: Headphones, pill: 'bg-pink-500/10 hover:bg-pink-500/20 border-pink-500/30 text-pink-300' },
-  soundcloud:   { label: 'SoundCloud',    short: 'SoundCloud', Icon: Radio,      pill: 'bg-orange-500/10 hover:bg-orange-500/20 border-orange-500/30 text-orange-300' },
+  soundcloud:   { label: 'SoundCloud',    short: 'SoundCloud', Icon: Cloud,      pill: 'bg-orange-500/10 hover:bg-orange-500/20 border-orange-500/30 text-orange-300' },
 }
 
 export function PlatformLink({ platform, href, variant = 'pill' }: PlatformLinkProps) {

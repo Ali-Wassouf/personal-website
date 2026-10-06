@@ -100,8 +100,8 @@ function ReleaseCard({ release, index }: { release: MusicRelease; index: number 
 
       <div className="space-y-2 pt-3 border-t border-white/[0.06]">
         {platforms.length > 0 && (
-          <div className="grid grid-cols-3 gap-1.5">
-            {platforms.slice(0, 3).map(([platform, href]) => (
+          <div className={platforms.length === 4 ? 'grid grid-cols-2 gap-1.5' : 'grid grid-cols-3 gap-1.5'}>
+            {platforms.map(([platform, href]) => (
               <PlatformLink key={platform} platform={platform} href={href} variant="compact" />
             ))}
           </div>
